@@ -56,7 +56,10 @@ class RegistroController extends Controller
         return Registro::where('edad',$request->edad)
             ->whereDate("fecha",$request->fecha)
             ->where("evento_id",$request->evento_id)
-            ->with('evento')->with('player')->get();
+            ->with('evento')
+            ->with('player')
+            ->orderBy('id')
+            ->get();
     }
 
     /**

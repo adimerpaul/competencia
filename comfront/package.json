@@ -2,7 +2,7 @@
   "name": "comfront",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "productName": "Competencia",
   "author": "adimerpaul <adimer101@gmail.com>",
   "private": true,
   "scripts": {
@@ -14,6 +14,7 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "jspdf": "^2.5.1",
     "moment": "^2.29.3",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",

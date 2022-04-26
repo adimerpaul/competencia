@@ -13,14 +13,17 @@
           <div class="col-4">
             <q-input type="date" dense outlined label="fecha"  v-model="fecha"/>
           </div>
-          <div class="col-12">
+          <div class="col-6">
             <q-btn type="submit" icon="search" color="info" label="consultar" class="full-width"/>
+          </div>
+          <div class="col-6">
+            <q-btn type="button" @click="imprimir" icon="print" color="positive" label="imprimir" class="full-width"/>
           </div>
         </div>
       </q-form>
     </div>
     <div class="col-12">
-      <q-table  :columns="columsregistro" :rows="registros" :filter="filter" dense>
+      <q-table   :columns="columsregistro" :rows="registros" :filter="filter" dense>
         <template v-slot:body-cell-opcion="props">
           <q-td auto-width :props="props">
             <q-btn flat  round icon="add_circle" @click="dialogtiempos=true;registro=props.row" color="positive" />
@@ -33,7 +36,24 @@
         </template>
         <template v-slot:body-cell-tiempo="props">
           <q-td auto-width :props="props">
-            <div class="text-body2">{{props.row.dato1}}<br>{{props.row.dato2}}<br>{{props.row.dato3}}<br>{{props.row.dato4}}<br>{{props.row.dato5}}</div>
+            <div class="text-body2">
+              {{props.row.dato1}} <q-badge v-if="props.row.dato1==props.row.tiempomin"  label="M" />   <br>
+              {{props.row.dato2}} <q-badge v-if="props.row.dato2==props.row.tiempomin"  label="M" />   <br>
+              {{props.row.dato3}} <q-badge v-if="props.row.dato3==props.row.tiempomin"  label="M" />   <br>
+              {{props.row.dato4}} <q-badge v-if="props.row.dato4==props.row.tiempomin"  label="M" />   <br>
+              {{props.row.dato5}} <q-badge v-if="props.row.dato5==props.row.tiempomin"  label="M" />   <br>
+<!--              <q-badge v-if="esmin(props.row.dato1,props.row.tiempomin)=='M'"  :label="esmin(props.row.dato1,props.row.tiempomin)" />-->
+<!--              <q-badge v-if="esmin(props.row.dato2,props.row.tiempomin)=='M'"  :label="esmin(props.row.dato2,props.row.tiempomin)" />-->
+<!--              <q-badge v-if="esmin(props.row.dato3,props.row.tiempomin)=='M'"  :label="esmin(props.row.dato3,props.row.tiempomin)" />-->
+<!--              <q-badge v-if="esmin(props.row.dato4,props.row.tiempomin)=='M'"  :label="esmin(props.row.dato4,props.row.tiempomin)" />-->
+<!--              <q-badge v-if="esmin(props.row.dato5,props.row.tiempomin)=='M'"  :label="esmin(props.row.dato5,props.row.tiempomin)" />-->
+<!--              <pre>{{props.row}}</pre>-->
+            </div>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-posicion="props">
+          <q-td auto-width :props="props">
+            <q-badge :label="props.pageIndex+1" color="positive"/>
           </q-td>
         </template>
         <template v-slot:top-right>
@@ -51,11 +71,11 @@
         <q-form>
           <div class="row">
             <div class="col-12">
-              <q-input dense type="time" outlined @update:model-value="updateRegistro1" label="dato1" v-model="registro.dato1" />
-              <q-input dense type="time" outlined @update:model-value="updateRegistro2" label="dato2" v-model="registro.dato2" />
-              <q-input dense type="time" outlined @update:model-value="updateRegistro3" label="dato3" v-model="registro.dato3" />
-              <q-input dense type="time" outlined @update:model-value="updateRegistro4" label="dato4" v-model="registro.dato4" />
-              <q-input dense type="time" outlined @update:model-value="updateRegistro5" label="dato5" v-model="registro.dato5" />
+              <q-input dense step="1" type="time" outlined @update:model-value="updateRegistro1" label="dato1" v-model="registro.dato1" />
+              <q-input dense step="1" type="time" outlined @update:model-value="updateRegistro2" label="dato2" v-model="registro.dato2" />
+              <q-input dense step="1" type="time" outlined @update:model-value="updateRegistro3" label="dato3" v-model="registro.dato3" />
+              <q-input dense step="1" type="time" outlined @update:model-value="updateRegistro4" label="dato4" v-model="registro.dato4" />
+              <q-input dense step="1" type="time" outlined @update:model-value="updateRegistro5" label="dato5" v-model="registro.dato5" />
             </div>
           </div>
         </q-form>
@@ -97,7 +117,8 @@
 
 <script>
 import moment from "moment"
-import {date} from "quasar";
+import {date} from "quasar"
+import {jsPDF} from "jspdf"
 export default {
   name: `Registro`,
   data(){
@@ -110,7 +131,7 @@ export default {
         // {name:'num',field:'num',label:'num'},
         {name:'nombre',field:'nombre',label:'nombre',align:'left'},
         {name:'categoria',field:'categoria',label:'categoria'},
-        {name:'tiempo',field:'tiempo',label:'tiempo'},
+        {name:'tiempo',field:'tiempo',label:'tiempo',align:'left'},
         {name:'posicion',field:'posicion',label:'posicion'},
       ],
       fecha:date.formatDate(new Date(),'YYYY-MM-DD'),
@@ -163,6 +184,80 @@ export default {
     })
   },
   methods:{
+    imprimir(){
+      // this.$q.loading.show()
+      // this.$axios.post(process.env.URL + '/reportemes',{inicio:this.fecha,fin:this.fecha2}).then(res=>{
+      //   this.miscomprobantestotales=res.data
+        let cm=this;
+        function header(fecha){
+          var img = new Image()
+          img.src = 'logo.png'
+          doc.addImage(img, 'png', 0.5, 0.5, 2, 2)
+          doc.setFont(undefined,'bold')
+          doc.text(5, 1, 'REGISTRO DE PLANILLA '+cm.evento.label+' '+cm.evento.tipo)
+          doc.text(5, 1.5, 'DE FECHA '+cm.fecha)
+          doc.text(1, 3, '________________________________________________________________________________________________________')
+          doc.text(1, 3, 'N')
+          doc.text(1.5, 3, 'NOMBRE')
+          doc.text(8.0, 3, 'CATEGORIA')
+          doc.text(10.5, 3, 'TIEMPOS')
+          doc.text(18, 3, 'MARCA')
+          doc.text(19.5, 3, 'POSICION')
+          // doc.text(16, 3, 'MONTO BS.')
+          // doc.text(18, 3, 'OPERADOR')
+          doc.setFont(undefined,'normal')
+        }
+        var doc = new jsPDF('p','cm','letter')
+        doc.setFont("courier");
+        doc.setFontSize(9);
+        header(this.fecha)
+        let y=0
+        let sumtotal=0
+        let con=0
+        this.registros.forEach(r=>{
+          if (r.nrocomprobante!=''){
+            y+=0.4
+            con++
+            doc.text(1, y+3, r.num.toString())
+            doc.text(1.5, y+3, r.nombre)
+            doc.text(8.0, y+3, this.evento.label)
+            doc.setFontSize(7);
+            doc.text(10.5, y+3, r.dato1+' '+r.dato2+' '+r.dato3+' '+r.dato4+' '+r.dato5)
+            doc.setFontSize(9);
+            doc.text(18, y+3, r.tiempomin)
+            doc.text(20.5, y+3, con.toString(),'center')
+            // doc.text(16, y+3, r.total)
+            // sumtotal+=parseInt(r.total)
+            // console.log(r.total)
+            // doc.text(18, y+3, r.user.codigo )
+            if (con==55){
+              con=0
+              doc.addPage();
+              header(this.fecha)
+              y=0
+            }
+          }
+        })
+        doc.setFont(undefined,'bold')
+        doc.text(3, y+3.5, 'SON: '+con+' PARTICIPANTES')
+        // doc.text(12, y+3.5, 'TOTAL RECAUDADCION: ')
+        doc.text(1.8, y+5, '_____________________          _____________________________       _________________________')
+        doc.text(2, y+5.3, 'FIRMA SELLO DIRECTOR')
+        doc.text(8, y+5.3, 'FIRMA SELLO INTRESADO1')
+        doc.text(15, y+5.3, 'FIRMA SELLO INTRESADO2')
+        // doc.setFont(undefined,'normal')
+        // doc.text(18, y+3.5, sumtotal+ ' Bs')
+        // const conversor = require('conversor-numero-a-letras-es-ar');
+        // let ClaseConversor = conversor.conversorNumerosALetras;
+        // let miConversor = new ClaseConversor();
+        // var a = miConversor.convertToText(sumtotal);
+        // doc.text(1, y+4, 'SON: '+ a.toUpperCase()+' BS')
+        // doc.save("Pago"+date.formatDate(Date.now(),'DD-MM-YYYY')+".pdf");
+        window.open(doc.output('bloburl'), '_blank');
+        // console.log(res.data)
+      //   this.$q.loading.hide()
+      // })
+    },
     filterFn (val, update) {
       if (val === '') {
         update(() => {
@@ -197,100 +292,158 @@ export default {
     },
     updateRegistro1(dato){
       this.$api.put('registro/'+this.registro.id,{
-        fecha:this.fecha,
-        edad:this.edad,
+        // fecha:this.fecha,
+        // edad:this.edad,
         dato1:dato,
         dato2:this.registro.dato2,
         dato3:this.registro.dato3,
         dato4:this.registro.dato4,
         dato5:this.registro.dato5,
-        evento_id:this.evento.id,
-        player_id:this.player.id,
+        // evento_id:this.evento.id,
+        // player_id:this.player.id,
       }).then(res=>{
-        console.log(res.data)
+        // console.log(res.data)
         // this.consulta()
+        this.consultasinloading()
       })
     },
     updateRegistro2(dato){
       this.$api.put('registro/'+this.registro.id,{
-        fecha:this.fecha,
-        edad:this.edad,
+        // fecha:this.fecha,
+        // edad:this.edad,
         dato1:this.registro.dato1,
         dato2:dato,
         dato3:this.registro.dato3,
         dato4:this.registro.dato4,
         dato5:this.registro.dato5,
-        evento_id:this.evento.id,
-        player_id:this.player.id,
+        // evento_id:this.evento.id,
+        // player_id:this.player.id,
       }).then(res=>{
-        console.log(res.data)
+        // console.log(res.data)
         // this.consulta()
+        this.consultasinloading()
       })
     },
     updateRegistro3(dato){
       this.$api.put('registro/'+this.registro.id,{
-        fecha:this.fecha,
-        edad:this.edad,
+        // fecha:this.fecha,
+        // edad:this.edad,
         dato1:this.registro.dato1,
         dato2:this.registro.dato2,
         dato3:dato,
         dato4:this.registro.dato4,
         dato5:this.registro.dato5,
-        evento_id:this.evento.id,
-        player_id:this.player.id,
+        // evento_id:this.evento.id,
+        // player_id:this.player.id,
       }).then(res=>{
-        console.log(res.data)
+        // console.log(res.data)
         // this.consulta()
+        this.consultasinloading()
       })
     },
     updateRegistro4(dato){
       this.$api.put('registro/'+this.registro.id,{
-        fecha:this.fecha,
-        edad:this.edad,
+        // fecha:this.fecha,
+        // edad:this.edad,
         dato1:this.registro.dato1,
         dato2:this.registro.dato2,
         dato3:this.registro.dato3,
         dato4:dato,
         dato5:this.registro.dato5,
-        evento_id:this.evento.id,
-        player_id:this.player.id,
+        // evento_id:this.evento.id,
+        // player_id:this.player.id,
       }).then(res=>{
-        console.log(res.data)
+        // console.log(res.data)
         // this.consulta()
+        this.consultasinloading()
       })
     },
     updateRegistro5(dato){
       this.$api.put('registro/'+this.registro.id,{
-        fecha:this.fecha,
-        edad:this.edad,
+        // fecha:this.fecha,
+        // edad:this.edad,
         dato1:this.registro.dato1,
         dato2:this.registro.dato2,
         dato3:this.registro.dato3,
         dato4:this.registro.dato4,
         dato5:dato,
-        evento_id:this.evento.id,
-        player_id:this.player.id,
+        // evento_id:this.evento.id,
+        // player_id:this.player.id,
       }).then(res=>{
-        console.log(res.data)
+        // console.log(res.data)
         // this.consulta()
+        this.consultasinloading()
+      })
+    },
+    consultasinloading(){
+      this.$api.post('consulta',{fecha:this.fecha,evento_id:this.evento.id,edad:this.edad}).then(res=>{
+        this.miconsulta(res)
       })
     },
     consulta(){
       this.$q.loading.show()
       this.$api.post('consulta',{fecha:this.fecha,evento_id:this.evento.id,edad:this.edad}).then(res=>{
-        console.log(res.data)
-        this.registros=[]
-        let c=1
-        res.data.forEach(r=>{
-          r.num=c
-          r.nombre=r.player.paterno+' '+r.player.materno+' '+r.player.nombres
-          r.categoria=r.evento.nombre
-          c++
-          this.registros.push(r)
-        })
+        this.miconsulta(res)
         this.$q.loading.hide()
       })
+    },
+    miconsulta(res){
+      this.registros=[]
+      let c=1
+      res.data.forEach(r=>{
+        let tiempomin=moment('23:59:59', "HH:mm:ss")
+        if (moment(r.dato1, "HH:mm:ss")<=tiempomin && r.dato1!="00:00:00"){
+          tiempomin=moment(r.dato1, "HH:mm:ss")
+        }
+        if (moment(r.dato2, "HH:mm:ss")<=tiempomin && r.dato2!="00:00:00"){
+          tiempomin=moment(r.dato2, "HH:mm:ss")
+        }
+        if (moment(r.dato3, "HH:mm:ss")<=tiempomin && r.dato3!="00:00:00"){
+          tiempomin=moment(r.dato3, "HH:mm:ss")
+        }
+        if (moment(r.dato4, "HH:mm:ss")<=tiempomin && r.dato4!="00:00:00"){
+          tiempomin=moment(r.dato4, "HH:mm:ss")
+        }
+        if (moment(r.dato5, "HH:mm:ss")<=tiempomin && r.dato5!="00:00:00"){
+          tiempomin=moment(r.dato5, "HH:mm:ss")
+        }
+        r.tiempomin=tiempomin.format('HH:mm:ss')
+        // r.segundos=moment.utc(secs*1000).format('HH:mm:ss');
+        let s = moment(r.tiempomin, 'HH:mm:ss').diff(moment().startOf('day'), 'seconds');
+        // console.log(s)
+        r.num=c
+        r.segundos=s
+        r.nombre=r.player.paterno+' '+r.player.materno+' '+r.player.nombres
+        r.categoria=r.evento.nombre
+        c++
+        this.registros.push(r)
+      })
+      for (let k = 1; k < res.data.length; k++) {
+        for (let i = 0; i < (res.data.length - k); i++) {
+          if (this.registros[i].segundos > this.registros[i + 1].segundos) {
+            // this.registros[i+1].posicion=i+1
+            let aux = this.registros[i];
+            this.registros[i] = this.registros[i + 1];
+            this.registros[i + 1] = aux;
+          }
+        }
+      }
+      // let tiempo=moment('23:59:59', "HH:mm:ss")
+      // let posicion=1
+      // this.registros.forEach(re=>{
+      //   if (moment(re.tiempomin, "HH:mm:ss")<tiempo){
+      //     // let auxi=
+      //     re.posicion=posicion
+      //     tiempo=moment(re.tiempomin, "HH:mm:ss")
+      //   }else{
+      //     re.posicion=posicion
+      //   }
+      //   posicion++
+      // })
     }
+
+  },
+  computed:{
   }
 }
 </script>
