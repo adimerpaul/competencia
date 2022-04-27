@@ -1,6 +1,7 @@
 import Login from "pages/Login";
 import Player from "pages/Player";
 import Registro from "pages/Registro";
+import Registrocompetencia from "pages/Registrocompetencia";
 
 const routes = [
   {
@@ -11,6 +12,7 @@ const routes = [
       { path: 'login', component:Login },
       { path: 'player', component:Player,meta: {requiresAuth: true,} },
       { path: 'registro', component:Registro,meta: {requiresAuth: true,} },
+      { path: 'registrocompetencia', component:Registrocompetencia,meta: {requiresAuth: true,} },
     ]
   },
 

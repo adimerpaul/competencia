@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          {{$store.getters["login/user"].name}}
+          {{$store.getters["login/user"].nombres}} {{$store.getters["login/user"].paterno}} {{$store.getters["login/user"].materno}}
         </q-toolbar-title>
 
         <div>
@@ -51,16 +51,16 @@
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="player" exact v-if="$store.getters['login/isLoggedIn']">
+        <q-item to="registrocompetencia" exact v-if="$store.getters['login/user'].tipo=='ADMINISTRADOR'">
           <q-item-section avatar>
             <q-icon name="document_scanner" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Registro de competidor </q-item-label>
-            <q-item-label caption>Registro de competidor</q-item-label>
+            <q-item-label>Registro de competencias </q-item-label>
+            <q-item-label caption>Registro de competencias</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="registro" exact v-if="$store.getters['login/isLoggedIn']">
+        <q-item to="registro" exact v-if="$store.getters['login/user'].tipo=='ADMINISTRADOR'">
           <q-item-section avatar>
             <q-icon name="app_registration" />
           </q-item-section>
