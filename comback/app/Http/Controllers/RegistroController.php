@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Registro;
 use App\Http\Requests\StoreRegistroRequest;
 use App\Http\Requests\UpdateRegistroRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 
@@ -38,7 +39,21 @@ class RegistroController extends Controller
      */
     public function store(StoreRegistroRequest $request)
     {
-        return Registro::create($request->all());
+//        return Registro::create($request->all());
+//        return $request;
+        $user=User::find($request->user()->id);
+        $user->verificado=true;
+        $user->save();
+        Registro::where("user_id",$request->user()->id)->delete();
+        foreach ($request->datos as $r){
+            if ($r['evento_id']!=0){
+                Registro::create([
+                    "user_id"=>$request->user()->id,
+                    "evento_id"=>$r['evento_id'],
+                    "categoria"=>$request->categoria,
+                ]);
+            }
+        }
     }
 
     /**

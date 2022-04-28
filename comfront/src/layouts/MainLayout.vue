@@ -51,7 +51,7 @@
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="registrocompetencia" exact v-if="$store.getters['login/user'].tipo=='ADMINISTRADOR'">
+        <q-item to="registrocompetencia" exact v-if="$store.getters['login/user'].tipo=='ADMINISTRADOR'||$store.getters['login/user'].tipo=='COMPETIDOR'">
           <q-item-section avatar>
             <q-icon name="document_scanner" />
           </q-item-section>

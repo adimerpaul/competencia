@@ -27,9 +27,9 @@ class EventoSeeder extends Seeder
             ["nombre"=>"5000 camita","tipo"=>"PISTA"],
             ["nombre"=>"10000 camita","tipo"=>"PISTA"],
             ["nombre"=>"Bala","tipo"=>"CAMPO"],
-            ["nombre"=>"Disto","tipo"=>"CAMPO"],
+            ["nombre"=>"Disco","tipo"=>"CAMPO"],
             ["nombre"=>"Jabalina","tipo"=>"CAMPO"],
-            ["nombre"=>"Matute","tipo"=>"CAMPO"],
+            ["nombre"=>"Matalete","tipo"=>"CAMPO"],
             ["nombre"=>"Martillo","tipo"=>"CAMPO"],
             ["nombre"=>"Salto largo","tipo"=>"CAMPO"],
         ]);

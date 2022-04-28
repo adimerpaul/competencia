@@ -92,6 +92,7 @@ class UserSeeder extends Seeder
             ["id"=>73,'paterno'=>"VEIZAN", 'materno'=>"BLACUTH", 'nombres'=>"OLIVIA JUANA", 'licencia'=>"Or-6-045", 'genero'=>"F", 'carnet'=>"3114496", 'fechanac'=>"1967-12-21", 'email'=>"oliviaveizan@masteroruro.cf", 'password'=>Hash::make("3114496Master"),"tipo"=>"COMPETIDOR"],
             ["id"=>74,'paterno'=>"VILLAROEL", 'materno'=>"VIDAURRE", 'nombres'=>"RENÉ ", 'licencia'=>"Or-6-064", 'genero'=>"M", 'carnet'=>"582440", 'fechanac'=>"1947-9-7", 'email'=>"renevillaroel@masteroruro.cf", 'password'=>Hash::make("582440Master"),"tipo"=>"COMPETIDOR"],
             ["id"=>75,'paterno'=>"ZENTENO", 'materno'=>"GUTIÉRREZ", 'nombres'=>"VICTORIA ", 'licencia'=>"------", 'genero'=>"F", 'carnet'=>"5740817", 'fechanac'=>"1985-12-23", 'email'=>"victoriazenteno@masteroruro.cf", 'password'=>Hash::make("5740817Master"),"tipo"=>"COMPETIDOR"],
+            ["id"=>76,'paterno'=>"CHAMBI", 'materno'=>"AJATA", 'nombres'=>"ADIMER PAUL", 'licencia'=>"------", 'genero'=>"M", 'carnet'=>"7336199", 'fechanac'=>"1989-04-02", 'email'=>"adimer@masteroruro.cf", 'password'=>Hash::make("7336199Master"),"tipo"=>"COMPETIDOR"],
         ]);
     }
 }

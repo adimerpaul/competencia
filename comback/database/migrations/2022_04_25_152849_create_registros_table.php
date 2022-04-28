@@ -15,17 +15,11 @@ return new class extends Migration
     {
         Schema::create('registros', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha');
-            $table->string('edad');
-            $table->time('dato1');
-            $table->time('dato2');
-            $table->time('dato3');
-            $table->time('dato4');
-            $table->time('dato5');
+            $table->string('categoria');
             $table->unsignedBigInteger('evento_id');
             $table->foreign('evento_id')->references('id')->on('eventos');
-            $table->unsignedBigInteger('player_id');
-            $table->foreign('player_id')->references('id')->on('players');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

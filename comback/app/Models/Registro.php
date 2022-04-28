@@ -9,21 +9,15 @@ class Registro extends Model
 {
     use HasFactory;
     protected $fillable=[
-        "fecha",
-        "edad",
-        "dato1",
-        "dato2",
-        "dato3",
-        "dato4",
-        "dato5",
+        "categoria",
         "evento_id",
-        "player_id",
+        "user_id",
 
     ];
-    public function evento(){
-        return $this->belongsTo(Evento::class);
-    }
-    public function player(){
-        return $this->belongsTo(Player::class);
-    }
+//    public function evento(){
+//        return $this->belongsTo(Evento::class);
+//    }
+//    public function player(){
+//        return $this->belongsTo(Player::class);
+//    }
 }
