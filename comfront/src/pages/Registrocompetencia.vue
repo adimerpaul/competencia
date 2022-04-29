@@ -60,9 +60,9 @@
             <div class="col-6 col-sm-4">
               <q-select :disable="!$store.getters['login/user'].verificado==0" outlined  label="Seleccionar Evento 5" :options="eventos" v-model="evento5" />
             </div>
-            <div class="col-6 col-sm-4">
-              <q-select :disable="!$store.getters['login/user'].verificado==0" outlined  label="Seleccionar Evento 6" :options="eventos" v-model="evento6" />
-            </div>
+<!--            <div class="col-6 col-sm-4">-->
+<!--              <q-select :disable="!$store.getters['login/user'].verificado==0" outlined  label="Seleccionar Evento 6" :options="eventos" v-model="evento6" />-->
+<!--            </div>-->
             <div class="col-12">
               <q-btn type="submit" :disable="!$store.getters['login/user'].verificado==0" class="full-width" icon="check" label="Registrar eventos" color="positive"/>
             </div>

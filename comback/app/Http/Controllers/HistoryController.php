@@ -15,7 +15,7 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        //
+        return History::with('evento')->with('user')->get();
     }
 
     /**
@@ -36,7 +36,7 @@ class HistoryController extends Controller
      */
     public function store(StoreHistoryRequest $request)
     {
-        //
+        History::create($request->all());
     }
 
     /**
@@ -70,7 +70,7 @@ class HistoryController extends Controller
      */
     public function update(UpdateHistoryRequest $request, History $history)
     {
-        //
+        $history->create($request->all());
     }
 
     /**
@@ -81,6 +81,6 @@ class HistoryController extends Controller
      */
     public function destroy(History $history)
     {
-        //
+        $history->delete();
     }
 }

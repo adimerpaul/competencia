@@ -25,4 +25,5 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::resource('player',\App\Http\Controllers\PlayerController::class);
     Route::resource('evento',\App\Http\Controllers\EventoController::class);
     Route::resource('registro',\App\Http\Controllers\RegistroController::class);
+    Route::resource('history',\App\Http\Controllers\HistoryController::class);
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use App\Models\Registro;
 use App\Http\Requests\StoreRegistroRequest;
 use App\Http\Requests\UpdateRegistroRequest;
@@ -18,7 +19,7 @@ class RegistroController extends Controller
      */
     public function index()
     {
-        return Registro::with('evento')->with('player')->get();
+        return Registro::with('evento')->with('user')->get();
     }
 
     /**
@@ -66,13 +67,12 @@ class RegistroController extends Controller
     {
         //
     }
-    public function consulta(Request $request)
-    {
-        return Registro::where('edad',$request->edad)
-            ->whereDate("fecha",$request->fecha)
+    public function consulta(Request $request){
+//        return $request;
+        return History::whereDate("fecha",$request->fecha)
             ->where("evento_id",$request->evento_id)
             ->with('evento')
-            ->with('player')
+            ->with('user')
             ->orderBy('id')
             ->get();
     }
