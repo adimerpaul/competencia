@@ -2,10 +2,10 @@
 <q-page class="q-pa-xs">
   <div class="row">
     <div class="col-12">
-      <q-form @submit.prevent="consulta">
+      <q-form >
         <div class="row">
           <div class="col-6">
-            <q-select dense  outlined label="evento" :options="eventos" v-model="evento" />
+            <q-select @update:model-value="consulta" dense  outlined label="evento" :options="eventos" v-model="evento" />
 <!--            <pre>{{evento}}</pre>-->
           </div>
 <!--          <div class="col-6">-->
@@ -14,17 +14,17 @@
           <div class="col-6">
             <q-input type="date" dense outlined label="fecha"  v-model="fecha"/>
           </div>
-          <div class="col-6">
-            <q-btn type="submit" icon="search" color="info" label="consultar" class="full-width"/>
-          </div>
-          <div class="col-6">
+<!--          <div class="col-6">-->
+<!--            <q-btn type="submit" icon="search" color="info" label="consultar" class="full-width"/>-->
+<!--          </div>-->
+          <div class="col-12">
             <q-btn type="button" @click="imprimir" icon="print" color="positive" label="imprimir" class="full-width"/>
           </div>
         </div>
       </q-form>
     </div>
     <div class="col-12">
-      <q-table   :columns="columsregistro" :rows="histories" :filter="filter" dense>
+      <q-table :title="'Evento '+evento.label"  :columns="columsregistro" :rows="histories" :filter="filter" dense>
         <template v-slot:body-cell-opcion="props">
           <q-td auto-width :props="props">
             <q-btn flat  round icon="add_circle" @click="dialogtiempos=true;registro=props.row" color="positive" />
@@ -258,79 +258,212 @@ export default {
         this.eventos.push(r)
       })
       this.evento=this.eventos[0]
-      this.consulta()
+      this.consulta(this.evento)
+      this.consultacombo()
     })
-    this.$api.get('registro').then(res=>{
-      // this.$q.loading.hide()
-      this.registros=[{'label':''}]
-      res.data.forEach(r=>{
-        // console.log(r)
-        let nacimiento=moment(r.user.fechanac)
-        let hoy=moment()
-        let anios=hoy.diff(nacimiento,"years")
-        r.label=anios+' '+r.user.paterno+' '+r.user.materno+' '+r.user.nombres+' '+r.evento.nombre
-        // r.label=r.user.paterno
-        this.registros.push(r)
-      })
-      this.registros2=this.registros
-      this.registro=this.registros[0]
-    })
+
     // this.consulta()
   },
   methods:{
+    consultacombo(){
+      this.$api.get('registro').then(res=>{
+        // this.$q.loading.hide()
+        this.registros=[{'label':''}]
+        res.data.forEach(r=>{
+          if (r.evento_id==this.evento.id){
+            let nacimiento=moment(r.user.fechanac)
+            let hoy=moment()
+            let anios=hoy.diff(nacimiento,"years")
+            r.label=anios+' '+r.user.paterno+' '+r.user.materno+' '+r.user.nombres+' '+r.evento.nombre
+            this.registros.push(r)
+          }
+        })
+        this.registros2=this.registros
+        this.registro=this.registros[0]
+      })
+    },
     imprimir(){
       // this.$q.loading.show()
       // this.$axios.post(process.env.URL + '/reportemes',{inicio:this.fecha,fin:this.fecha2}).then(res=>{
       //   this.miscomprobantestotales=res.data
-        let cm=this;
-        function header(fecha){
-          var img = new Image()
-          img.src = 'logo.png'
-          doc.addImage(img, 'png', 0.5, 0.5, 2, 2)
-          doc.setFont(undefined,'bold')
-          doc.text(5, 1, 'REGISTRO DE PLANILLA '+cm.evento.label+' '+cm.evento.tipo)
-          doc.text(5, 1.5, 'DE FECHA '+cm.fecha)
-          doc.text(1, 3, '________________________________________________________________________________________________________')
-          doc.text(1, 3, 'N')
-          doc.text(1.5, 3, 'NOMBRE')
-          doc.text(8.0, 3, 'CATEGORIA')
-          doc.text(10.5, 3, 'TIEMPOS')
-          doc.text(18, 3, 'MARCA')
-          doc.text(19.5, 3, 'POSICION')
-          // doc.text(16, 3, 'MONTO BS.')
-          // doc.text(18, 3, 'OPERADOR')
-          doc.setFont(undefined,'normal')
+
+
+        // let y=0
+        // let sumtotal=0
+        // let con=0
+
+        // this.histories.sort(function (a, b) {
+        //   if (a.categoria > b.categoria) {
+        //     return 1;
+        //   }
+        //   if (a.categoria < b.categoria) {
+        //     return -1;
+        //   }
+        //   // a must be equal to b
+        //   return 0;
+        // })
+        // console.log(this.histories)
+      let d10_14=[]
+      let d15_19=[]
+      let d20_24=[]
+      let d25_29=[]
+      let d30_34=[]
+      let d35_39=[]
+      let d40_44=[]
+      let d45_49=[]
+      let d50_54=[]
+      let d55_59=[]
+      let d60_64=[]
+      let d65_69=[]
+      let d70_74=[]
+      let d75_79=[]
+      let d80_84=[]
+      let d85_89=[]
+      let d90_94=[]
+      let d95_99=[]
+        this.histories.forEach((r,i)=>{
+        //   console.log(r)
+        //   // if (this.r="15-19"){
+        //   //   doc.addPage();
+        //   //   heade""ha)
+        //   //   y+=0.4
+        //   //   con++
+        //   //   // doc.text(1, y+3, r.num.toString())
+        //   //   // doc.text(1.5, y+3, r.nombre)
+        //   //   // doc.text(8.0, y+3, this.evento.label)
+        //   //   // doc.setFontSize(7);
+        //   //   // doc.text(10.5, y+3, r.dato1+' '+r.dato2+' '+r.dato3+' '+r.dato4+' '+r.dato5)
+        //   //   // doc.setFontSize(9);
+        //   //   // doc.text(18, y+3, r.tiempomin)
+        //   //   // doc.text(20.5, y+3, con.toString(),'center')
+        //   //   // doc.text(16, y+3, r.total)
+        //   //   // sumtotal+=parseInt(r.total)
+        //   //   // console.log(r.total)
+        //   //   // doc.text(18, y+3, r.user.codigo )
+        //   //   if (con==55){
+        //   //     con=0
+        //   //     doc.addPage();
+        //   //     //h//eader(this.fecha)
+        //   //     y=0
+        //   //   }
+        //   // }else
+        //   console.log(i)
+          if (r.categoria=="10-14"){
+            //doc.addPage();
+            d10_14.push(r)
+            // r.categoria="10-14"
+          } else if (r.categoria=="15-19"){
+            //doc.addPage();
+            d15_19.push(r)
+            // r.categoria="20-24"
+          }else if (r.categoria=="20-24"){
+            //doc.addPage();
+            d20_24.push(r)
+            // r.categoria="20-24"
+          }else if (r.categoria=="25-29"){
+            //doc.addPage();
+            d25_29.push(r)
+            // r.categoria="25-29"
+          }else if (r.categoria=="30-34"){
+            //doc.addPage();
+            d30_34.push(r)
+            // r.categoria="30-34"
+          }else if (r.categoria=="35-39"){
+            //doc.addPage();
+            d35_39.push(r)
+            // r.categoria="35-39"
+          }else if (r.categoria=="40-44"){
+            //doc.addPage();
+            d40_44.push(r)
+            // r.categoria="40-44"
+          }else if (r.categoria=="45-49"){
+            //doc.addPage();
+            d45_49.push(r)
+            // r.categoria="45-49"
+          }else if (r.categoria=="50-54"){
+            //doc.addPage();
+            d50_54.push(r)
+            // r.categoria="50-54"
+          }else if (r.categoria=="55-59"){
+            //doc.addPage();
+            d55_59.push(r)
+            // r.categoria="55-59"
+          }else if (r.categoria=="60-64"){
+            //doc.addPage();
+            d60_64.push(r)
+            // r.categoria="60-64"
+          }else if (r.categoria=="65-69"){
+            //doc.addPage();
+            d65_69.push(r)
+            // r.categoria="25-29"
+          }else if (r.categoria=="70-74"){
+            //doc.addPage();
+            d70_74.push(r)
+            // r.categoria="70-74"
+          }else if (r.categoria=="75-79"){
+            //doc.addPage();
+            d75_79.push(r)
+            // r.categoria="75-79"
+          }else if (r.categoria=="80-84"){
+            //doc.addPage();
+            d80_84.push(r)
+            // r.categoria="80-84"
+          }else if (r.categoria=="85-89"){
+            //doc.addPage();
+            d85_89.push(r)
+            // r.categoria="85-89"
+          }else if (r.categoria=="90-94"){
+            //doc.addPage();
+            d90_94.push(r)
+            // r.categoria="90-94"
+          }else if (r.categoria=="95-99"){
+            //doc.addPage();
+            d95_99.push(r)
+            // r.categoria="95-99"
+          }
+        })
+      let cm=this;
+      function print(datos){
+        if (datos.length==0){
+          return false
         }
         var doc = new jsPDF('p','cm','letter')
         doc.setFont("courier");
         doc.setFontSize(9);
-        header(this.fecha)
-        let y=0
-        let sumtotal=0
+        var img = new Image()
+        img.src = 'logo.png'
+        doc.addImage(img, 'png', 0.5, 0.5, 2, 2)
+        doc.setFont(undefined,'bold')
+        doc.text(5, 1, 'REGISTRO DE PLANILLA '+cm.evento.label+' '+cm.evento.tipo)
+        doc.text(5, 1.5, 'DE FECHA '+cm.fecha+'   EVENTO '+cm.evento.label)
+        doc.text(1, 3, '________________________________________________________________________________________________________')
+        doc.text(1, 3, 'N')
+        doc.text(1.5, 3, 'NOMBRE')
+        doc.text(8.0, 3, 'CATEGORIA')
+        doc.text(10.5, 3, 'TIEMPOS')
+        doc.text(18, 3, 'MARCA')
+        doc.text(19.5, 3, 'POSICION')
+        // doc.text(16, 3, 'MONTO BS.')
+        // doc.text(18, 3, 'OPERADOR')
+        doc.setFont(undefined,'normal')
+
+        let y=0.4
         let con=0
-        this.registros.forEach(r=>{
-          if (r.nrocomprobante!=''){
-            y+=0.4
-            con++
-            doc.text(1, y+3, r.num.toString())
-            doc.text(1.5, y+3, r.nombre)
-            doc.text(8.0, y+3, this.evento.label)
-            doc.setFontSize(7);
-            doc.text(10.5, y+3, r.dato1+' '+r.dato2+' '+r.dato3+' '+r.dato4+' '+r.dato5)
-            doc.setFontSize(9);
-            doc.text(18, y+3, r.tiempomin)
-            doc.text(20.5, y+3, con.toString(),'center')
-            // doc.text(16, y+3, r.total)
-            // sumtotal+=parseInt(r.total)
-            // console.log(r.total)
-            // doc.text(18, y+3, r.user.codigo )
-            if (con==55){
-              con=0
-              doc.addPage();
-              header(this.fecha)
-              y=0
-            }
+        datos.forEach(d=>{
+          con++
+          doc.text(1, y+3, con.toString())
+          doc.text(1.5, y+3, d.user.paterno+' '+d.user.materno+' '+d.user.nombres)
+          doc.text(8.0, y+3, d.categoria)
+          // console.log()
+          if (d.mstotales!="0"){
+            doc.text(10.5, y+3, d.minutos+'m '+d.segundos+'s '+d.milisegundos+'ms')
+            doc.text(18, y+3, d.mstotales.toString())
+          }else{
+            doc.text(10.5, y+3, d.metros1+'m '+d.centimetros1+'cn ')
+            doc.text(18, y+3, d.cntotales.toString())
           }
+          doc.text(19.5, y+3, con.toString())
+          y+=0.4
         })
         doc.setFont(undefined,'bold')
         doc.text(3, y+3.5, 'SON: '+con+' PARTICIPANTES')
@@ -339,15 +472,186 @@ export default {
         doc.text(2, y+5.3, 'FIRMA SELLO DIRECTOR')
         doc.text(8, y+5.3, 'FIRMA SELLO INTRESADO1')
         doc.text(15, y+5.3, 'FIRMA SELLO INTRESADO2')
-        // doc.setFont(undefined,'normal')
-        // doc.text(18, y+3.5, sumtotal+ ' Bs')
-        // const conversor = require('conversor-numero-a-letras-es-ar');
-        // let ClaseConversor = conversor.conversorNumerosALetras;
-        // let miConversor = new ClaseConversor();
-        // var a = miConversor.convertToText(sumtotal);
-        // doc.text(1, y+4, 'SON: '+ a.toUpperCase()+' BS')
-        // doc.save("Pago"+date.formatDate(Date.now(),'DD-MM-YYYY')+".pdf");
         window.open(doc.output('bloburl'), '_blank');
+      }
+      if (this.evento.tipo=='PISTA'){
+        d10_14.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d10_14)
+        d15_19.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d15_19)
+        d20_24.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d20_24)
+        d25_29.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d25_29)
+        d30_34.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d30_34)
+        d35_39.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d35_39)
+        d40_44.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d40_44)
+        d45_49.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d45_49)
+        d50_54.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d50_54)
+        d55_59.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d55_59)
+        d60_64.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d60_64)
+        d65_69.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d65_69)
+        d70_74.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d70_74)
+        d75_79.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d75_79)
+        d80_84.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d80_84)
+        d85_89.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d85_89)
+        d90_94.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d90_94)
+        d95_99.sort(function(a, b) {
+          return parseFloat(a.mstotales) - parseFloat(b.mstotales);
+        });
+        print(d95_99)
+      }else{
+        {
+          d10_14.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d10_14)
+          d15_19.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d15_19)
+          d20_24.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d20_24)
+          d25_29.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d25_29)
+          d30_34.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d30_34)
+          d35_39.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d35_39)
+          d40_44.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d40_44)
+          d45_49.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d45_49)
+          d50_54.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d50_54)
+          d55_59.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d55_59)
+          d60_64.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d60_64)
+          d65_69.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d65_69)
+          d70_74.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d70_74)
+          d75_79.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d75_79)
+          d80_84.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d80_84)
+          d85_89.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d85_89)
+          d90_94.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d90_94)
+          d95_99.sort(function(a, b) {
+            return parseFloat(a.cntotales) - parseFloat(b.cntotales);
+          });
+          print(d95_99)
+        }
+      }
+
+      // console.log(d10_14)
+      // d15_19
+      // d20_24
+      // d25_29
+      // d30_34
+      // d35_39
+      // d40_44
+      // d45_49
+      // d50_54
+      // d55_59
+      // d60_64
+      // d65_69
+      // d70_74
+      // d75_79
+      // d80_84
+      // d85_89
+      // d90_94
+      // d95_99
+
+
+      // doc.setFont(undefined,'normal')
+      // doc.text(18, y+3.5, sumtotal+ ' Bs')
+      // const conversor = require('conversor-numero-a-letras-es-ar');
+      // let ClaseConversor = conversor.conversorNumerosALetras;
+      // let miConversor = new ClaseConversor();
+      // var a = miConversor.convertToText(sumtotal);
+      // doc.text(1, y+4, 'SON: '+ a.toUpperCase()+' BS')
+      // doc.save("Pago"+date.formatDate(Date.now(),'DD-MM-YYYY')+".pdf");
         // console.log(res.data)
       //   this.$q.loading.hide()
       // })
@@ -394,11 +698,18 @@ export default {
         cancel:true
       }).onOk(()=>{
         this.$q.loading.show()
+        let cn1=parseInt(this.metros1*100)+parseInt(this.centimetros1)
+        let cn2=parseInt(this.metros2*100)+parseInt(this.centimetros2)
+        let cn3=parseInt(this.metros3*100)+parseInt(this.centimetros3)
+        let cn4=parseInt(this.metros4*100)+parseInt(this.centimetros4)
+        let cn5=parseInt(this.metros5*100)+parseInt(this.centimetros5)
+        // console.log(cn1,cn2,cn3,cn4,cn5)
+        // console.log(Math.max(cn1,cn2,cn3,cn4,cn5))
           this.$api.post('history',{
             'fecha':date.formatDate(new Date(),'YYYY-MM-DD'),
             'hora':date.formatDate(new Date(),'HH:mm:ss'),
             'categoria':this.registro.categoria,
-            'horas':this.horas==''?0:this.horas,
+            // 'horas':this.horas==''?0:this.horas,
             'minutos':this.minutos==''?0:this.minutos,
             'segundos':this.segundos==''?0:this.segundos,
             'milisegundos':this.milisegundos==''?0:this.milisegundos,
@@ -412,12 +723,16 @@ export default {
             'centimetros4':this.centimetros4==''?0:this.centimetros4,
             'metros5':this.metros5==''?0:this.metros5,
             'centimetros5':this.centimetros5==''?0:this.centimetros5,
+            'mstotales':this.segundos*1000+this.minutos*1000*60+this.milisegundos,
+            'cntotales':Math.max(cn1,cn2,cn3,cn4,cn5),
             'user_id':this.registro.user_id,
             'evento_id':this.registro.evento_id,
             'registro_id':this.registro.id,
           }).then(res=>{
+            // console.log(res.data)
             this.dialogregistro=false
-            this.consulta()
+            this.consulta(this.evento)
+            // this.consultacombo()
           })
       })
     },
@@ -528,11 +843,12 @@ export default {
         // this.miconsulta(res)
       })
     },
-    consulta(){
-      // console.log(this.evento)
+    consulta(evento){
+      console.log(evento)
       // console.log({fecha:this.fecha,evento_id:this.evento.id})
       this.$q.loading.show()
-      this.$api.post('consulta',{fecha:this.fecha,evento_id:this.evento.id}).then(res=>{
+      this.consultacombo()
+      this.$api.post('consulta',{fecha:this.fecha,evento_id:evento.id}).then(res=>{
         // this.miconsulta(res)
         // console.log(res.data)
         this.histories=res.data

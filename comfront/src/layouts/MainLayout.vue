@@ -51,13 +51,22 @@
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="registrocompetencia" exact v-if="$store.getters['login/user'].tipo=='ADMINISTRADOR'||$store.getters['login/user'].tipo=='COMPETIDOR'">
+        <q-item to="registrocompetencia" exact v-if="$store.getters['login/user'].tipo==''||$store.getters['login/user'].tipo=='COMPETIDOR'">
           <q-item-section avatar>
             <q-icon name="document_scanner" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Registro de competencias </q-item-label>
             <q-item-label caption>Registro de competencias</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item to="seguimiento" exact v-if="$store.getters['login/user'].tipo==''||$store.getters['login/user'].tipo=='COMPETIDOR'">
+          <q-item-section avatar>
+            <q-icon name="escalator" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Seguimiento de competencias </q-item-label>
+            <q-item-label caption>Seguimiento de competencias</q-item-label>
           </q-item-section>
         </q-item>
         <q-item to="registro" exact v-if="$store.getters['login/user'].tipo=='ADMINISTRADOR'">

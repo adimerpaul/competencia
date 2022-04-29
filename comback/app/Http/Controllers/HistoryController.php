@@ -36,6 +36,7 @@ class HistoryController extends Controller
      */
     public function store(StoreHistoryRequest $request)
     {
+//        return $request;
         History::create($request->all());
     }
 

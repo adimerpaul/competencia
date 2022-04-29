@@ -29,7 +29,7 @@ class RegistroController extends Controller
      */
     public function create(Request $request)
     {
-        return $request;
+        return Registro::where('user_id',$request->user()->id)->with('histories')->with('evento')->get();
     }
 
     /**

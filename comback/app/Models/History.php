@@ -29,6 +29,8 @@ class History extends Model
         'user_id',
         'evento_id',
         'registro_id',
+        'mstotales',
+        'cntotales',
     ];
     public function evento(){
         return $this->belongsTo(Evento::class);

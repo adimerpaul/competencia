@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PlayerSeeder::class,
             EventoSeeder::class,
-            RegistroSeeder::class,
+//            RegistroSeeder::class,
         ]);
     }
 }

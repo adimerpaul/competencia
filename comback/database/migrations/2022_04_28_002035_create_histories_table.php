@@ -32,7 +32,10 @@ return new class extends Migration
             $table->integer('centimetros4')->nullable()->default(0);
             $table->integer('metros5')->nullable()->default(0);
             $table->integer('centimetros5')->nullable()->default(0);
+            $table->integer('mstotales')->nullable()->default(0);
+            $table->integer('cntotales')->nullable()->default(0);
             $table->unsignedBigInteger('registro_id');
+//            $table->unsignedBigInteger('registro_id');
             $table->foreign('registro_id')->references('id')->on('registros');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

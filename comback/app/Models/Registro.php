@@ -19,7 +19,7 @@ class Registro extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
-//    public function player(){
-//        return $this->belongsTo(Player::class);
-//    }
+    public function histories(){
+        return $this->hasMany(History::class);
+    }
 }
